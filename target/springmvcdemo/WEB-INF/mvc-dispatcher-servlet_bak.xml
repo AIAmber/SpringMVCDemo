@@ -2,47 +2,47 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
        http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!--指明 controller 所在包，并扫描其中的注解-->
+        <!-- Package of controller. Scan the annotation -->
     <context:component-scan base-package="com.leolee.controller"/>
 
-    <!-- 静态资源(js、image等)的访问 -->
+    <!-- Static resource -->
     <mvc:default-servlet-handler/>
 
-    <!-- 开启注解 -->
+    <!-- Annotation -->
     <mvc:annotation-driven/>
 
-    <!--ViewResolver 视图解析器-->
-    <!--用于支持Servlet、JSP视图解析-->
+    <!-- ViewResolver -->
+    <!-- For Servlet, Jsp -->
     <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <!-- 表示JPA Repository所在的包 -->
+    <!-- JPA Repository's pkg -->
     <jpa:repositories base-package="com.leolee.repository"/>
 
+    <!-- Link to persistence.xml -->
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
+        <property name="persistenceUnitName" value="myPersistenceUnit"/>
         <property name="packagesToScan" value="com.leolee.model" />
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
         <property name="jpaProperties">
             <props>
-                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
-                <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/springdemo?useSSL=false</prop>
-                <prop key="hibernate.connection.username">root</prop>
-                <prop key="hibernate.connection.password">111111</prop>
+                <prop key="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</prop>
+                <prop key="hibernate.connection.url">jdbc:oracle:thin:@//localhost:1521/orcl</prop>
+                <prop key="hibernate.connection.username">sparknet</prop>
+                <prop key="hibernate.connection.password">Abcd1234</prop>
                 <prop key="hibernate.show_sql">false</prop>
                 <prop key="hibernate.connection.useUnicode">true</prop>
                 <prop key="hibernate.connection.characterEncoding">UTF-8</prop>
@@ -50,10 +50,9 @@
                 <prop key="hibernate.use_sql_comments">true</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.connection.autoReconnect">true</prop>
-                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
                 <prop key="connection.autoReconnectForPools">true</prop>
                 <prop key="connection.is-connection-validation-required">true</prop>
-
                 <prop key="hibernate.c3p0.validate">true</prop>
                 <prop key="hibernate.connection.provider_class">org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider</prop>
                 <prop key="hibernate.c3p0.min_size">5</prop>
@@ -67,11 +66,11 @@
         </property>
     </bean>
 
-    <!-- 事务管理 -->
+    <!-- Transaction Manager -->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <!-- 开启事务管理注解 -->
+    <!-- Open TM annotation -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>
